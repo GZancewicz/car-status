@@ -6,7 +6,9 @@ import {
   Modal, Button, Carousel,
   Container,
   Row,
-  Col
+  Col,
+  ButtonGroup,
+  ToggleButton
 } from "react-bootstrap";
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
@@ -100,6 +102,44 @@ function App() {
     setShowModal(handleShow)
   }
 
+  async function StatusToggle(e, car) {
+    car.status = e.currentTarget.value
+    await axios.put(APIURL + '/' + car.id, car)
+    handleClose()
+  }
+
+  function StatusToggleButtons(car) {
+    const [checked, setChecked] = useState(false);
+    const [radioValue, setRadioValue] = useState('1');
+
+    const radios = [
+      { name: 'En Route', value: 'En Route' },
+      { name: 'Idle', value: 'Idle' },
+      { name: 'Broken Down', value: 'Broken Down' },
+    ];
+
+    return (
+      <>
+        <ButtonGroup>
+          {radios.map((radio, idx) => (
+            <ToggleButton
+              key={idx}
+              id={`radio-${idx}`}
+              type="radio"
+              variant={idx % 2 ? 'outline-success' : 'outline-danger'}
+              name="radio"
+              value={radio.value}
+              checked={car.status === radio.value}
+              onChange={(e) => StatusToggle(e, car)}
+            >
+              {radio.name}
+            </ToggleButton>
+          ))}
+        </ButtonGroup>
+      </>
+    );
+  }
+
   const ModalContent = () => {
     return (
       <Modal show={show} onHide={handleClose} >
@@ -116,6 +156,7 @@ function App() {
                 Toggle Status
               </Button></ol>
           </ul>
+          {StatusToggleButtons(modalInfo)}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Close </Button>
