@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import logo from './logo.svg';
+
 import './App.css';
 import axios from "axios";
 import {
-  Modal, Button, Carousel,
+  Modal, Button,
   Container,
   Row,
   Col,
@@ -16,11 +16,10 @@ import {
   GoogleMap,
   withScriptjs,
   withGoogleMap,
-  Marker,
-  InfoWindow
+  Marker
 } from "react-google-maps"
 
-import * as carData from "./data/car-locations.json";
+
 
 const GOOGLE_MAPS_URL = 'https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyAhEBULbR-9Y-GpafIc_twpyNMDCqXn8R0'
 const APIURL = "https://6174019a110a740017223221.mockapi.io/fleet"
@@ -65,20 +64,6 @@ function App() {
     }
   }
 
-  async function ResetCarStatus(car) {
-    if (car.status === "Broken Down") {
-      car.status = "Idle"
-    } else {
-      if (car.status === "Idle") {
-        car.status = "En Route"
-      } else {
-        car.status = "Broken Down"
-      }
-    }
-    await axios.put(APIURL + '/' + car.id, car)
-    handleClose()
-  }
-
   useEffect(() => {
     setCars(getCarData())
   }, [updates])
@@ -109,8 +94,7 @@ function App() {
   }
 
   function StatusToggleButtons(car) {
-    const [checked, setChecked] = useState(false);
-    const [radioValue, setRadioValue] = useState('1');
+
 
     const radios = [
       { name: 'En Route', value: 'En Route' },
@@ -148,13 +132,8 @@ function App() {
         </Modal.Header>
         <Modal.Body>
           <ul>
-            <ol>Status: {modalInfo.status}</ol>
             <ol>Latitude: {modalInfo.lat}</ol>
             <ol>Longitude: {modalInfo.lon}</ol>
-            <ol>
-              <Button type="submit" onClick={() => ResetCarStatus(modalInfo)}>
-                Toggle Status
-              </Button></ol>
           </ul>
           {StatusToggleButtons(modalInfo)}
         </Modal.Body>
@@ -192,27 +171,10 @@ function App() {
               toggleTrueFalse();
             }}
           >
-            {/* {selectedCar && selectedCar.vin === car.vin && (
-              <InfoWindow
-                onCloseClick={() => {
-                  setSelectedCar(null);
-                }}
-                position={{
-                  lat: Number(selectedCar.lat),
-                  lng: Number(selectedCar.lon)
-                }}
-              >
-                <div>
-                  <h3>{selectedCar.vin}</h3>
-                  <h4>{selectedCar.status}</h4>
-                </div>
-              </InfoWindow>
-            )} */}
-
           </Marker>
         ))}
 
-       
+
 
 
       </GoogleMap>
