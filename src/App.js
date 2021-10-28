@@ -39,7 +39,7 @@ function StatusIcon(car) {
 
 function App() {
 
- 
+
 
   const [cars, setCars] = useState([])
   const [modalInfo, setModalInfo] = useState([])
@@ -127,10 +127,13 @@ function App() {
 
   function Map() {
 
+    const [selectedCar, setSelectedCar] = useState(null);
+    const [show, setShow] = useState(false);
 
-      return (
+
+    return (
       <GoogleMap defaultZoom={16}
-          defaultCenter={{ lat: 33.020028, lng: -96.704167 }}
+        defaultCenter={{ lat: 33.020028, lng: -96.704167 }}
       >
         {Array.from(cars).map(car => (
           <Marker
@@ -142,11 +145,35 @@ function App() {
             icon={{
               url: StatusIcon(car)
             }}
-        
-          />
+            onClick={() => {
+              setSelectedCar(car);
+              setModalInfo(car);
+              toggleTrueFalse();
+            }}
+          >
+            {/* {selectedCar && selectedCar.vin === car.vin && (
+              <InfoWindow
+                onCloseClick={() => {
+                  setSelectedCar(null);
+                }}
+                position={{
+                  lat: Number(selectedCar.lat),
+                  lng: Number(selectedCar.lon)
+                }}
+              >
+                <div>
+                  <h3>{selectedCar.vin}</h3>
+                  <h4>{selectedCar.status}</h4>
+                </div>
+              </InfoWindow>
+            )} */}
+
+          </Marker>
         ))}
 
-        
+       
+
+
       </GoogleMap>
     )
 
